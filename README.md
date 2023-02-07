@@ -1,4 +1,4 @@
-# CapElec ⚡🛒
+# Cap⚡Elec 🛒
 
 📦 Full Stack Ecommerce website 🔌
 
