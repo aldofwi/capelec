@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { Product, Footer, FooterBanner } from '../../components'
+
 const Home = () => {
 
   return (
@@ -7,12 +9,12 @@ const Home = () => {
     <>
       HeroBanner
 
-      <div>
+      <div className='products-heading'>
         <h2>Best Selling Products</h2>
         <p>Cables of many sizes</p>
       </div>
 
-      <div>
+      <div className='products-container'>
         {['Product 1', 'Product 2'].map((product) => product)}
       </div>
 
