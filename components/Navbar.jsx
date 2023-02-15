@@ -8,7 +8,7 @@ const Navbar = () => {
     
     <div className='navbar-container'>
       <p className="logo">
-        <Link href="/">CapElec Stuff</Link>
+        <Link href="/">Cap ⚡ Elec</Link>
       </p>
 
       <button type="button" className='cart-icon' onClick="">
