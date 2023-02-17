@@ -6,10 +6,37 @@ const Context = createContext();
 export const StateContext = ({ children }) => {
 
     const [qty,             setQty]             = useState(1);
-    const [cartItems,       setCartItems]       = useState();
+    const [cartItems,       setCartItems]       = useState([]);
     const [totalPrice,      setTotalPrice]      = useState();
     const [totalQuantities, setTotalQuantities] = useState();
     const [showCart,        setShowCart]        = useState(false);
+
+    const onAdd = (product, quantity) => {
+        // Si le produit figure déjà dans notre panier.
+        const checkProductInCart = cartItems.find((item) => item._id === product._id);
+        
+        setTotalPrice((prevTotalPrice) => prevTotalPrice + product.price * quantity);
+        setTotalQuantities((prevTotalQuantities) => prevTotalQuantities + quantity);
+
+        if(checkProductInCart) {
+
+            const updateCartItems = cartItems.map((cartProduct) => {
+                if(cartProduct._id === product._id) return {
+                    ...cartProduct,
+                    quantity: cartProduct.quantity + quantity
+                }
+            })
+
+            setCartItems(updateCartItems);
+            
+        } else {
+            // Si le produit ne figure pas dans notre panier.
+            product.quantity = quantity;
+            setCartItems([...cartItems, { ...product }]);
+        }
+
+        toast.success(`${qty} ${product.name} added to the basket.`);
+    }
 
     const incQty = () => {
         setQty((prevQty) => prevQty + 1);
@@ -31,7 +58,8 @@ export const StateContext = ({ children }) => {
                 totalQuantities,
                 qty,
                 incQty,
-                decQty
+                decQty,
+                onAdd
             }}
         >
             { children }
