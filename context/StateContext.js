@@ -4,6 +4,7 @@ import product from 'sanity_capelec/schemas/product';
 
 const Context = createContext();
 
+// States are shared using that great context. Qty locally changes.
 export const StateContext = ({ children }) => {
 
     const [qty,             setQty]             = useState(1);
@@ -14,6 +15,7 @@ export const StateContext = ({ children }) => {
 
     let foundProduct;
     let index;
+
 
     const onAdd = (product, quantity) => {
         // Si le produit figure déjà dans notre panier.
@@ -40,6 +42,16 @@ export const StateContext = ({ children }) => {
         }
 
         toast.success(`${qty} ${product.name} added to the basket.`);
+    }
+
+    const onRemove = (product) => {
+
+        foundProduct = cartItems.find((item) => item._id === product._id);
+        const newCartItems = cartItems.filter((item) => item._id !== product._id);
+
+        setTotalPrice((prevTotalPrice) => prevTotalPrice - foundProduct.price * foundProduct.quantity);
+        setTotalQuantities(prevTotalQuantities => prevTotalQuantities - foundProduct.quantity);
+        setCartItems(newCartItems);
     }
 
     const toggleCartItemQuantity = (id, value) => {
@@ -91,6 +103,7 @@ export const StateContext = ({ children }) => {
                 incQty,
                 decQty,
                 onAdd,
+                onRemove,
                 toggleCartItemQuantity
             }}
         >
