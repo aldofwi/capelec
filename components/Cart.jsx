@@ -3,13 +3,37 @@ import Link from 'next/link'
 import { AiOutlineMinus, AiOutlinePlus, AiOutlineLeft, AiOutlineShopping } from 'react-icons/ai'
 import { TiDeleteOutline } from 'react-icons/ti'
 import { useStateContext } from 'context/StateContext'
+import getStripe from 'lib/getStripe'
 import { urlFor } from 'lib/client'
 import toast from 'react-hot-toast'
 
 const Cart = () => {
 
   const cartRef = useRef();
+
   const { totalPrice, totalQuantities, cartItems, setShowCart, toggleCartItemQuantity, onRemove} = useStateContext();
+
+  const handleCheckout = async () => {
+    // When using 'await' a method has to be asynchronous
+
+    const stripe = await getStripe();
+
+    const response = await fetch('/api/stripe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cartItems),
+    });
+
+    if( response.statusCode === 500) return;
+
+    const data = await response.json();
+
+    toast.loading('Redirecting ...');
+
+    stripe.redirectToCheckout({ sessionId: data.id });
+  }
 
   return (
     
@@ -86,7 +110,7 @@ const Cart = () => {
                   <button 
                     type="button"
                     className="btn"
-                    onClick="">
+                    onClick={handleCheckout}>
                     Pay with Stripe
                   </button>
                 </div>
