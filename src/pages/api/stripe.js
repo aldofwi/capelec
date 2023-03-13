@@ -6,34 +6,47 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
 
     console.log('Cart Items ---> ')
-    console.log(req.body.cartItems)
+    console.log(req.body)
 
     try {
         const params = {
             submit_type: 'pay',
             mode: 'payment',
             payment_method_types: ['card'],
-            billing_address_collection: 'auto',
+            billing_address_collection: 'required',
             shipping_options: [
-                { shipping_rate: 'shr_1Mi3GaAa1NOGB95ZsNnjwO5p' },
                 { shipping_rate: 'shr_1Mi3I7Aa1NOGB95ZcENkclAa' },
+                { shipping_rate: 'shr_1MkZ4hAa1NOGB95ZIzvz9ltO' },
             ],
-            line_items: req.body.cartItems.map((item) => {
+            line_items: req.body.map((item) => {
               const img = item.image[0].asset._ref;
               const newImage = img.replace('image-', 'https://cdn.sanity.io/images/dsq6jqoe/production/').replace('-webp', '.webp')
 
               return {
-                price_data: 
+                price_data: {
+                  currency: 'usd',
+                  product_data: {
+                    name: item.name,
+                    images: [newImage],
+                  },
+                  tax_behavior: "exclusive",
+                  unit_amount: item.price * 100,
+                },
+                adjustable_quantity: {
+                  enabled: true,
+                  minimum: 1,
+                },
+                quantity: item.quantity
               }
             }),
-            mode: 'payment',
-            success_url: `${req.headers.origin}/?success=true`,
-            cancel_url: `${req.headers.origin}/?canceled=true`,
+            success_url: `${req.headers.origin}/success`,
+            cancel_url: `${req.headers.origin}/canceled`,
           }
 
       // Create Checkout Sessions from body params.
       const session = await stripe.checkout.sessions.create(params);
-      res.redirect(303, session.url);
+      res.status(200).json(session);
+
     } catch (err) {
       res.status(err.statusCode || 500).json(err.message);
     }
