@@ -59,7 +59,7 @@ const Cart = () => {
                     type="button"
                     className="btn"
                     onClick={() => setShowCart(false)}>
-                    Continue my Shopping
+                    Continue Shopping
                   </button>
                 </Link>
               </div>
