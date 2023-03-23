@@ -11,7 +11,7 @@ const Home = ({ products, bannerData }) => {
       { console.log(bannerData) }
 
       <div className='products-heading'>
-        <h2>Best Sellers</h2>
+        <h2>Ultimate Best Sellers</h2>
         <p>Quality Type of Accessories</p>
       </div>
 
