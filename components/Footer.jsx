@@ -6,7 +6,7 @@ const Footer = () => {
   return (
 
     <div className='footer-container'>
-      <p>2023 CAP⚡ELEC All Right Reserved ©️</p>
+      <p>2023 CAP⚡ELEC All Rights Reserved ©️</p>
       <p className="icons">
         <AiFillInstagram />
         <AiOutlineTwitter />
